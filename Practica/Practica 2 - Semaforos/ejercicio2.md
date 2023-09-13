@@ -7,12 +7,14 @@ sem mutex = 1;
 
 Process verificador[i = 1 to 4] {
     int id, nivel;
+    P(mutex);
     while (fallos != Ø) {
-        P(mutex);
         tomar_primero(fallos, id, nivel);
-        if (nivel == 3) print(id);
         V(mutex);
+        if (nivel == 3) print(id);
+        P(mutex);
     }
+    V(mutex);
 } 
 
 ```
@@ -24,12 +26,14 @@ int cant_fallos_por_nivel[3] = ([n] 0)
 
 Process verificador[i =  1 to 4] {
     int id, nivel;
+    P(mutex);
     while (fallos != Ø) {
-        P(mutex);
         tomar_primero(fallos, id, nivel);
         cant_fallos_por_nivel[nivel] = cant_fallos_por_nivel[nivel] + 1;
         V(mutex);
+        P(mutex);
     }
+    V(mutex);
 }
 ```
 ### c) Ídem b) pero cada proceso debe ocuparse de contar los fallos de un nivel de gravedad determinado.
@@ -38,44 +42,17 @@ fallos = set of (int, int);
 sem mutex = 1
 int cant_fallos_por_nivel[3] = ([n] 0)
 
-// Se necesita un semáforo para los dos procesos?
-Process verificador_critico[i =  1 to 2] {
+
+Process verificador[i = 0 to 3] {
     int id, nivel;
+    P(mutex);
     while (fallos != Ø) {
-        P(mutex);
-
         tomar_primero(fallos, id, nivel);
-        if (nivel == 3) cant_fallos_por_nivel[3] = cant_fallos_por_nivel[3] + 1;
-        else insertar(fallos, id, nivel);
-        
+        if (nivel == i) cant_fallos_por_nivel[i] = cant_fallos_por_nivel[i] + 1;
+        else insertar(fallos, id, nivel);      
         V(mutex);
-    }
-}
-
-Process verificador_alto {
-    int id, nivel;
-    while (fallos != Ø) {
         P(mutex);
-
-        tomar_primero(fallos, id, nivel);
-        if (nivel == 2) cant_fallos_por_nivel[2] = cant_fallos_por_nivel[2] + 1;
-        else insertar(fallos, id, nivel);
-        
-        V(mutex);
     }
-}
-
-Process verificador_intermedio {
-    int id, nivel;
-    while (fallos != Ø) {
-        P(mutex);
-
-        tomar_primero(fallos, id, nivel);
-        if (nivel == 1) cant_fallos_por_nivel[1] = cant_fallos_por_nivel[1] + 1;
-        else insertar(fallos, id, nivel);
-        
-        V(mutex);
-    }
+    V(mutex);
 }
 ```
-__// Está bien la solución? Hay alguna otra forma de hacerlo sin tener que definir varios procesos?__
