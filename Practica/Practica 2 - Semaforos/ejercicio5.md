@@ -2,194 +2,98 @@
 
 ### a) La empresa cuenta con 2 empleados: un empleado Preparador que se ocupa de preparar los paquetes y dejarlos en los contenedores; un empelado Entregador que se ocupa de tomar los paquetes de los contenedores y realizar la entregas. Tanto el Preparador como el Entregador trabajan de a un paquete por vez.
 ```
-int contenedores[N] = ([N] 0)
-sem baton = 1, mutex_prep = 0, mutex_entr = 0;
-int cant_paquetes = 0;
-bool d_prep = false, d_entr = false;
+sem contenedores_libres = N, entregas = 0;
 
 process Preparador {
-    int paquete;
     while (true) {
-        preparando paquete;
-        P(baton);
-        
-        if (cant_paquetes == N) { d_prep = true; V(baton); P(mutex_prep); }
-        
-        //preparando paquete;
-        contenedores[cant_paquetes] = paquete;
-        cant_paquetes = cant_paquetes + 1;
-
-        V(baton);
-
-        P(baton);
-        
-        if (d_entr) { d_entr = false; V(mutex_entr); } 
-        else V(baton);
-    
+        preparar paquete;
+        P(contenedores_libres);
+        depositar paquete en contenedor;
+        V(entregas);
     }
 }
 
 process Entregador {
-    int paquete;
     while (true) {
-        P(baton);
-
-        if (cant_paquetes == 0) { d_entr = true; V(baton); P(mutex_entr); }
-        paquete = contenedores[cant_paquetes];
-        cant_paquetes = cant_paquetes - 1;
-
-        V(baton);
-        entregar paquete;
-
-        P(baton);
-        if (d_prep) { d_prep = false; V(mutex_prep) }
-        else V(baton);
-
+        P(entregas);
+        extraer paquete;
+        V(contenedores_libres);
+        realizar entrega;
     }
 }
 
 ```
 ### b) Modifique la solución a) para el caso en que haya P empleados Preparadores.
 ```
-int contenedores[N] = ([N] 0)
-sem baton = 1, mutex_prep = 0, mutex_entr = 0;
-int cant_paquetes = 0, d_prep = 0, d_entr = 0;
+sem contenedores_libres = N, entregas = 0, mutex_preparador = 1;
 
-process Preparador[i=1 to P] {
-    int paquete;
+process Preparador[id=1 to P] {
     while (true) {
-        preparando paquete;
-        P(baton);
-        
-        if (cant_paquetes == N) { d_prep = d_prep + 1; V(baton); P(mutex_prep); }
-        
-        //preparando paquete;
-        contenedores[cant_paquetes] = paquete;
-        cant_paquetes = cant_paquetes + 1;
-
-        V(baton);
-
-        P(baton);
-        
-        if (d_entr == 1) { d_entr = d_entr - 1; V(mutex_entr); } 
-        else V(baton);
-    
+        preparar paquete;
+        P(contenedores_libres);
+        P(mutex_preparador);
+        depositar paquete en contenedor;
+        V(mutex_preparador);
+        V(entregas);
     }
 }
 
 process Entregador {
-    int paquete;
     while (true) {
-        P(baton);
-
-        if (cant_paquetes == 0) { d_entr = d_entr + 1; V(baton); P(mutex_entr); }
-        paquete = contenedores[cant_paquetes];
-        cant_paquetes = cant_paquetes - 1;
-
-        V(baton);
-        entregar paquete;
-
-        P(baton);
-        if (d_prep > 0) { d_prep = d_prep - 1; V(mutex_prep) }
-        else V(baton);
-
+        P(entregas);
+        extraer paquete;
+        V(contenedores_libres);
+        realizar entrega;
     }
 }
-
 ```
 ### c) Modifique la solución a) para el caso en que haya E empleados Entregadores.
 ```
-int contenedores[N] = ([N] 0)
-sem baton = 1, mutex_prep = 0, mutex_entr = 0;
-int cant_paquetes = 0, d_prep = 0, d_entr = 0;
+sem contenedores_libres = N, entregas = 0, mutex_entregador = 1;
 
 process Preparador {
-    int paquete;
     while (true) {
-        preparando paquete;
-        P(baton);
-        
-        if (cant_paquetes == N) { d_prep = d_prep + 1; V(baton); P(mutex_prep); }
-        
-        //preparando paquete;
-        contenedores[cant_paquetes] = paquete;
-        cant_paquetes = cant_paquetes + 1;
-
-        V(baton);
-
-        P(baton);
-        
-        if (d_entr > 0) { d_entr = d_entr - 1; V(mutex_entr); } 
-        else V(baton);
-    
+        preparar paquete;
+        P(contenedores_libres);
+        depositar paquete en contenedor;
+        V(entregas);
     }
 }
 
-process Entregador[i=1 to E] {
-    int paquete;
+process Entregador[id=1 to E] {
     while (true) {
-        P(baton);
-
-        if (cant_paquetes == 0) { d_entr = d_entr + 1; V(baton); P(mutex_entr); }
-        paquete = contenedores[cant_paquetes];
-        cant_paquetes = cant_paquetes - 1;
-
-        V(baton);
-        entregar paquete;
-
-        P(baton);
-        if (d_prep == 1) { d_prep = d_prep - 1; V(mutex_prep) }
-        else V(baton);
-
+        P(entregas);
+        P(mutex_entregador);
+        extraer paquete;
+        V(mutex_entregador);
+        V(contenedores_libres);
+        realizar entrega;
     }
 }
-
 ```
 ### d) Modifique la solución a) para el caso en que haya P empleados Preparadores y E empleadores Entregadores.
 ```
-int contenedores[N] = ([N] 0)
-sem baton = 1, mutex_prep = 0, mutex_entr = 0;
-int cant_paquetes = 0, d_prep = 0, d_entr = 0;
+sem contenedores_libres = N, entregas = 0, mutex_entregador = 1, mutex_preparador = 1;
 
-process Preparador[i=1 to P] {
-    int paquete;
+process Preparador[id=1 to P] {
     while (true) {
-        preparando paquete;
-        P(baton);
-        
-        if (cant_paquetes == N) { d_prep = d_prep + 1; V(baton); P(mutex_prep); }
-        
-        //preparando paquete;
-        contenedores[cant_paquetes] = paquete;
-        cant_paquetes = cant_paquetes + 1;
-
-        V(baton);
-
-        P(baton);
-        
-        if (d_entr > 0) { d_entr = d_entr - 1; V(mutex_entr); } 
-        else V(baton);
-    
+        preparar paquete;
+        P(contenedores_libres);
+        P(mutex_preparador);
+        depositar paquete en contenedor;
+        V(mutex_preparador);
+        V(entregas);
     }
 }
 
-process Entregador[i=1 to E] {
-    int paquete;
+process Entregador[id=1 to E] {
     while (true) {
-        P(baton);
-
-        if (cant_paquetes == 0) { d_entr = d_entr + 1; V(baton); P(mutex_entr); }
-        paquete = contenedores[cant_paquetes];
-        cant_paquetes = cant_paquetes - 1;
-
-        V(baton);
-        entregar paquete;
-
-        P(baton);
-        if (d_prep > 0) { d_prep = d_prep - 1; V(mutex_prep) }
-        else V(baton);
-
+        P(entregas);
+        P(mutex_entregador);
+        extraer paquete;
+        V(mutex_entregador);
+        V(contenedores_libres);
+        realizar entrega;
     }
 }
-
 ```
