@@ -72,17 +72,27 @@ process Coordinador {
 ```
 cola Impresoras;
 int llegada = 1;
-sem mutex = 1, sem_pers[N] = ([N] 0), cant_impresoras = 5;
+sem mutex = 1, sem_pers[N] = ([N] 0), cant_impresoras = 5, mutex_cola = 1;
 
 process Persona[i=1 to N] {
+    Impresora impresora;
     int mi_turno;
+    
     P(mutex);
     mi_turno = llegada;
     llegada = llegada + 1;
     V(mutex);
+
     P(sem_pers[mi_turno]);
-    Imprimir(documento);
+    P(mutex_cola);
+    impresora = Impresoras.pop();
+    V(mutex_cola);
+    impresora.Imprimir(documento);
     V(cant_impresoras);
+
+    P(mutex_cola);
+    Impresoras.push(impresora);
+    V(mutex_cola);
 }
 
 process Coordinador {
