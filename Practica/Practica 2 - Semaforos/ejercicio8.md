@@ -3,7 +3,7 @@
 sem mutex = 1, barrera = 0;
 int cant_empleados = 0;
 piezas_por_empleado = set of (int, int);
-cola piezas[T];
+cola piezas;
 
 process Empleado[id= 1 to E] {
     Pieza, pieza;
@@ -28,7 +28,7 @@ process Empleado[id= 1 to E] {
     push(piezas_por_empleado, (cant_piezas, id));
     V(mutex);
 
-    if (id == E) { cant, ganador = piezas_por_empleado.max(); dar_premio(ganador); }  //piezas_por_empleado.max() retornar al empleado que más piezas fabricó.
+    if (id == E) { cant, ganador = piezas_por_empleado.max(); dar_premio(ganador); }  //piezas_por_empleado.max() retorna al empleado que más piezas fabricó.
 
 }   
 ```
