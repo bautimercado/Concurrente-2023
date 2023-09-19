@@ -3,7 +3,7 @@
 - El vidriero continuamente hace vidrios y los deja en otro depósito con capacidad para 50 vidrios.
 - Los armadores continuamente toman un marco y un vidrio (en ese orden) de los depósitos correspondientes y arman la ventana (cada ventana es armada por un único armador).
 ```
-cola marcos[30], vidrios[50];
+cola marcos, vidrios;
 sem espacio_marcos = 30, mutex_cola_marcos = 1, espacio_vidrios = 50, mutex_cola_vidrios = 1, marcos_disponibles = 0, vidrios_disponibles = 0;
 
 process Carpintero[id = 1 to 4] {
