@@ -10,6 +10,7 @@ process Persona[i=1 to N] {
 }
 ```
 ### b) Modifique la solución de (a) para el caso en que se deba respetar el orden de llegada.
+- Se podría hacer con una cola. Qué sería mejor?
 ```
 sem mutex = 1; sem_priv[N] = ([N] 0)
 int llegada = 1; turno_de = 1;
@@ -88,11 +89,12 @@ process Persona[i=1 to N] {
     impresora = Impresoras.pop();
     V(mutex_cola);
     impresora.Imprimir(documento);
-    V(cant_impresoras);
+    
 
     P(mutex_cola);
     Impresoras.push(impresora);
     V(mutex_cola);
+    V(cant_impresoras);
 }
 
 process Coordinador {
