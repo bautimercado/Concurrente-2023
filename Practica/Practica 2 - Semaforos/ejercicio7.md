@@ -9,6 +9,7 @@ process Alumno[id=1 to 50] {
     P(mutex_tarea);
     mi_tarea = obtener_tarea();
     cant_tareas_entregadas = cant_tareas_entregadas + 1;
+
     if (cant_tareas_entregadas == 50) {
         for i = 1 to 50 { V(barrera); }
         V(mutex_profesor);    // Necesario?
@@ -16,11 +17,11 @@ process Alumno[id=1 to 50] {
     V(mutex_tarea);
     
     P(barrera);
-    realizar tarea;
-    P(mutex_tarea);   // Una vez que el alumno terminó su tarea
+    //realizar tarea;
+    P(mutex_tarea);   // Limita a todos los alumnos incluso de distintos grupos?
     grupos[mi_tarea] = grupos[mi_tarea] + 1;
     
-    // Si los 5 alumnos de una tarea terminaron, se despierta al prof y se espera a que ponga la nota (si libero la SC podría terminar otro alumno y pisar el valor de grupo_termina)
+    // Si los 5 alumnos de una tarea terminaron, se despierta al prof y se espera a que ponga la nota (si libero la SC podría terminar otro alumno y pisar el valor de grupo_termina). Ese problema existe si uso una cola?
     if (grupos[mi_tarea] == 5) { grupo_termino = mi_tarea; V(mutex_profesor); P(esperando_nota[mi_tarea]); }
     V(mutex_tarea);
 
@@ -32,7 +33,7 @@ process Profesor {
     P(mutex_profesor);   // Necesario?
     for j = 10 to 1;
         P(mutex_profesor);
-        notas[grupo_termino] = k;
+        notas[grupo_termino] = j;
         for k = 1 to 5 { V(esperando_nota[grupo_termino]); } // Para que los 5 alumnos de la tarea terminada despierten.
 
 }
