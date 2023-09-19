@@ -3,10 +3,11 @@
 sem mutex = 1, barrera = 0;
 int cant_empleados = 0;
 piezas_por_empleado = set of (int, int);
-cola piezas;
+cola piezas[T];
 
 process Empleado[id= 1 to E] {
-    int cant_piezas = 0, pieza;
+    Pieza, pieza;
+    int cant_piezas = 0, cant, ganador;
     P(mutex);
     cant_empleados = cant_empleados + 1;
     if (cant_empleados == E) { for i = 1 to E V(barrera); }
@@ -24,10 +25,10 @@ process Empleado[id= 1 to E] {
     V(mutex);
 
     P(mutex);
-    insertar_ordenado(piezas_por_empleado, (cant_piezas, id));
+    push(piezas_por_empleado, (cant_piezas, id));
     V(mutex);
 
-    //Implementar lógica del empleado ganador? Otro proceso?
+    if (id == E) { cant, ganador = piezas_por_empleado.max(); dar_premio(ganador); }  //piezas_por_empleado.max() retornar al empleado que más piezas fabricó.
 
 }   
 ```
