@@ -11,9 +11,7 @@ process Preparador {
     while (true) {
         //preparar paquete;
         P(contenedores_libres);
-        P(mutex);
         paquetes[primero_ocupado] = paquete;
-        V(mutex);
         primero_ocupado = (primero_ocupado + 1) % n;
         V(entregas);
     }
@@ -23,9 +21,7 @@ process Entregador {
     Paquete paquete;
     while (true) {
         P(entregas);
-        P(mutex);
         paquetes[primero_libre] = paquete;
-        V(mutex);
         primero_libre = (primero_libre + 1) % n;
         V(contenedores_libres);
         //realizar entrega;
@@ -39,7 +35,7 @@ sem contenedores_libres = N, entregas = 0, mutex = 1;
 int primero_libre = 0, primero_ocupado = 0;
 Paquete paquetes[n];
 
-process Preparador {
+process Preparador[i= 1 to P]{
     Paquete paquete;
     while (true) {
         //preparar paquete;
@@ -84,7 +80,7 @@ process Preparador {
     }
 }
 
-process Entregador {
+process Entregador[i=1 to E] {
     Paquete paquete;
     while (true) {
         P(entregas);
@@ -103,7 +99,7 @@ sem contenedores_libres = N, entregas = 0, mutex = 1;
 int primero_libre = 0, primero_ocupado = 0;
 Paquete paquetes[n];
 
-process Preparador {
+process Preparador[i=1 to P] {
     Paquete paquete;
     while (true) {
         //preparar paquete;
@@ -116,7 +112,7 @@ process Preparador {
     }
 }
 
-process Entregador {
+process Entregador[i=1 to E] {
     Paquete paquete;
     while (true) {
         P(entregas);
