@@ -10,25 +10,34 @@ process Persona[i=1 to N] {
 }
 ```
 ### b) Modifique la solución de (a) para el caso en que se deba respetar el orden de llegada.
-- Se podría hacer con una cola. Qué sería mejor?
 ```
-sem mutex = 1; sem_priv[N] = ([N] 0)
-int llegada = 1; turno_de = 1;
+Cola c;
+sem mutex = 1, sem_persona[N] = ([N] 0);
+bool libre = true;
 
-process Persona[i=1 to N] {
-    int mi_turno;
+process Persona[id=1 to N] {
+    int id_extraido;
     P(mutex);
-    mi_turno = llegada;
-    llegada = llegada + 1;
-    V(mutex);
-
-    P(mutex);
-    if (turno_de != mi_turno) { V(mutex); P(sem_priv[mi_turno]) }
+    if (libre) {
+        libre = false;
+        V(mutex);
+    }
+    else {
+        c.push(id);
+        V(mutex);
+        P(sem_persona[id]);
+    }
     Imprimir(documento);
-    turno_de = turno_de + 1;
+    P(mutex);
+    if (c.empty())
+        libre = true;
+    else {
+        id_extraido = c.pop();
+        V(sem_persona[id_extraido]);
+    }
     V(mutex);
 
-    if (mi_turno != N) V(sem_priv[mi_turno+1]);
+    
 }
 ```
 ### c) Modifique la solución de (a) para el caso en que se deba respetar estrictamente el orden dado por el identificador del proceso (la persona X no puede usar la impresora hasta que no haya terminado de usarla la persona X-1).
@@ -48,59 +57,72 @@ process Persona[i=1 to N] {
 ```
 ### d) Modifique la solución de (b) para el caso en que además hay un proceso Coordinador que le indica a cada persona que es su turno de usar la impresora.
 ```
-int llegada = 1;
-sem mutex = 1, sem_pers[N] = ([N] 0), sem_coor = 0;
+Cola c;
+sem mutex = 1, sem_persona[N] = ([N] 0), sem_coordinador = 0, persona_termina = 0;
 
-process Persona[i=1 to N] {
-    int mi_turno;
+process Persona[id=1 to N] {
     P(mutex);
-    mi_turno = llegada;
-    llegada = llegada + 1;
+    c.push(id);
     V(mutex);
-    P(sem_pers[mi_turno]);
+    V(sem_coordinador);
+    P(sem_pers[id]);
     Imprimir(documento);
-    V(sem_coor);
+    V(persona_termina);
 }
 
 process Coordinador {
-    for j = 1 to N {
-        V(sem_pers[j]);
-        P(sem_coor);
+    int id_extraido;
+    while (true) {
+        P(sem_coordinador);
+        P(mutex);
+        id_extraido = c.pop();
+        V(mutex);
+        V(sem_pers[id_extraido]);
+        P(persona_termina);
     }
 }
 ```
 ### e) Modificar la solución (d) para el caso en que sean 5 impresoras. El coordinador le indica a la persona cuando puede usar una impresora, y cual debe usar.
 ```
-cola Impresoras;
-int llegada = 1;
-sem mutex = 1, sem_pers[N] = ([N] 0), cant_impresoras = 5, mutex_cola = 1;
+Cola c, impresoras;
+sem mutex_c = 1, mutex_impresoras = 1,sem_pers[N] = ([N] 0), cant_impresoras = 5, coordinador = 0;
+Impresora persona_impresora[N];
 
-process Persona[i=1 to N] {
+process Persona[id=1 to N] {
     Impresora impresora;
-    int mi_turno;
-    
-    P(mutex);
-    mi_turno = llegada;
-    llegada = llegada + 1;
-    V(mutex);
+    P(mutex_c);
+    c.push(id);
+    V(mutex_c);
 
-    P(sem_pers[mi_turno]);
-    P(mutex_cola);
-    impresora = Impresoras.pop();
-    V(mutex_cola);
-    impresora.Imprimir(documento);
-    
+    V(coordinador);
+    P(sem_pers[id]);
+    impresora = persona_impresora[id];
+    Imprimir(impresora, documento);
 
-    P(mutex_cola);
-    Impresoras.push(impresora);
-    V(mutex_cola);
+    P(mutex_impresoras);
+    impresoras.push(impresora);
+    V(mutex_impresoras);
+
     V(cant_impresoras);
 }
 
 process Coordinador {
-    for j = 1 to N {
-        V(sem_pers[j]);
+    int id_extraido;
+    Impresora impresora;
+    while (true) {
+        P(coordinador);
         P(cant_impresoras);
+
+        P(mutex_c);
+        id_extraido = c.pop();
+        V(mutex_c);
+
+        P(mutex_impresoras);
+        impresora = impresoras.pop();
+        V(mutex_impresoras);
+    
+        persona_impresora[id_extraido] = impresora;
+        V(sem_pers[id_extraido]);
     }
 }
 ```
