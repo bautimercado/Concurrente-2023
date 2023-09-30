@@ -3,7 +3,7 @@
 - Necesitaríamos N procesos persona, un monitor Impresora, que tendrá variables que representen si la impresora está libre, una cola de espera para las personas que están esperando y dos procedimientos que simbolizen el bloqueo y liberación del recurso.
 
 ### a) Implemente una solución suponiendo no importa el orden de uso. Existe una función Fotocopiar() que simula el uso de la fotocopiadora.
-```
+```cpp
 Monitor Impresora {
     bool libre = true;
     cond cola;
@@ -27,7 +27,7 @@ Process Persona[i=1 to N] {
 ```
 ### b) Modifique la solución de (a) para el caso en que se deba respetar el orden de llegada.
 
-```
+```cpp
 Monitor Impresora {
     bool libre = true;
     int espera = 0;
@@ -53,7 +53,7 @@ Process Persona[i=1 to N] {
 
 ### c) Modifique la solución de (b) para el caso en que se deba dar prioridad de acuerdo con la edad de cada persona (cuando la fotocopiadora está libre la debe usar la persona de mayor edad entre las que estén esperando para usarla).
 
-```
+```cpp
 Monitor Impresora {
     bool libre = true;
     cond espera[N];
@@ -88,7 +88,7 @@ Process Persona[id=1 to N] {
 
 ### d) Modifique la solución de (a) para el caso en que se deba respetar estrictamente el orden dado por el identificador del proceso (la persona X no puede usar la fotocopiadora hasta que no haya terminado de usarla la persona X-1).
 
-```
+```cpp
 Monitor Impresora {
     bool libre = true;
     cond espera[N];
@@ -122,7 +122,7 @@ Process Persona[id=1 to N] {
 
 ### e) Modifique la solución de (b) para el caso en que además haya un Empleado que le indica a cada persona cuando debe usar la fotocopiadora.
 
-```
+```cpp
 Monitor Impresora {
     bool libre = true;
     int cant_dormidos = 0;
@@ -169,7 +169,7 @@ Process Empleado {
 
 - A qué se refiere con cuando hacerlo??
 
-```
+```cpp
 Monitor Impresora {
     cola fotocopiadoras<Fotocopiadora>;  //Con 10 instancias de fotocopiadoras
     cola dormidos<int>;

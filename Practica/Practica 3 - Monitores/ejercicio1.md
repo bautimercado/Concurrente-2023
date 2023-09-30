@@ -1,6 +1,6 @@
 ## 1. Se dispone de un puente por el cual puede pasar un solo auto a la vez. Un auto pide permiso para pasar por el puente, cruza por el mismo y luego sigue su camino.
 
-```
+```cpp
 Monitor Puente
     cond cola;
     int cant= 0;
@@ -30,15 +30,16 @@ End Process;
 ### b. ¿Se podría simplificar el programa? ¿Sin monitor? ¿Menos procedimientos? ¿Sin variable condition? En caso afirmativo, rescriba el código.
 
 - Un poco sí, podríamos hacer que en vez de que haya un cant haya una variable booleana (ya que siempre es 1 o 0), también podríamos hacer un solo procedimiento donde el proceso use el puente (recordar que la ejecución de los monitores es de atómica).
-```
+
+```cpp
 Monitor Puente {
-    Procedure usarPuente() {
+    Procedure cruzarPuente() {
         "el auto cruza el puente"
     }
 }
 
 Process Auto[a=1 to M] {
-    Puente.usarPuente();
+    Puente.cruzarPuente();
 }
 ```
 

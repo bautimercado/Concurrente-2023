@@ -7,13 +7,14 @@
   - Cuando el lector sale de la BD, se incrementa esa cantidad y se despierta a algún proceso que haya estado esperando.
 
 ### b) Implemente el acceso a la base por parte de los procesos, sabiendo que el motor de base de datos puede atender a lo sumo 5 consultas de lectura simultáneas.
-```
+
+```cpp
 Monitor AccesoBD() {
     int cant_consultas = 5;
     cond cola;
 
     procedure acceder() {
-        if (cant_consultas = 0) { wait(cola); }
+        while (cant_consultas == 0) { wait(cola); }
         cant_consultas--;
     }
 
