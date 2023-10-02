@@ -14,12 +14,10 @@ process Alumno[id=1 to 50] {
     id_grupo = obtener_tarea();
     P(mutex_cant_alumnos);
     cant_alumnos = cant_alumnos + 1;
-    V(mutex_cant_alumnos);
-
     if (cant_alumnos == 50) {
         for i = 1 to 50 { V(barrera); }
     }
-    
+    V(mutex_cant_alumnos);
     P(barrera);
     //realizar tarea;
     P(mutex_grupo[id_grupo]);
