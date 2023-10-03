@@ -66,3 +66,6 @@ Process alumno[id=1 to 50] {
     comision.terminar_tarea(grupo);
 }
 ```
+
+- Debería haber 2 monitores para evitar el cuello de botella.
+- No es necesario el proceso JTP.

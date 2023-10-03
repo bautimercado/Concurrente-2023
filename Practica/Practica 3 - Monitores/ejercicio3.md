@@ -88,6 +88,8 @@ Process Persona[id=1 to N] {
 
 ### d) Modifique la solución de (a) para el caso en que se deba respetar estrictamente el orden dado por el identificador del proceso (la persona X no puede usar la fotocopiadora hasta que no haya terminado de usarla la persona X-1).
 
+- Basta con una entero.
+
 ```cpp
 Monitor Impresora {
     bool libre = true;
@@ -160,14 +162,14 @@ Process Empleado {
     int cant_personas = N;
     while (cant_personas > 0) {
         Impresora.dar_impresora();
-        cant_personas++;
+        cant_personas--;
     }
 }
 ```
 
 ### f) Modificar la solución (e) para el caso en que sean 10 fotocopiadoras. El empleado le indica a la persona cuál fotocopiadora usar y cuándo hacerlo.
 
-- A qué se refiere con cuando hacerlo??
+- No es necesario cond privados
 
 ```cpp
 Monitor Impresora {
@@ -192,7 +194,7 @@ Monitor Impresora {
             wait(esperar_fotocopiadora);
         id = dormidos.pop();
         signal(personas[id]);
-        fotocopiadoras.pop();
+        fotocopiadora = fotocopiadoras.pop();
         fotocopiadora_persona[id] = fotocopiadora;
     }
 

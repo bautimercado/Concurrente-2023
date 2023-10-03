@@ -2,6 +2,8 @@
 
 ### a) Resuelva considerando que el corralón tiene un único empleado.
 
+- Debería implementar la lógica de si que los procesos solo se encolen si no hay un empleado libre. (ver ejercicio 4 de la exp. practica 3)
+
 ```cpp
 Monitor Corralon {
     cond clientes, empleado;
