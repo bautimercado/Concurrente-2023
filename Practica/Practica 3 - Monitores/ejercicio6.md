@@ -60,7 +60,7 @@ Process JTP {
 
 Process alumno[id=1 to 50] {
     int grupo;
-    comision.fomrar_fila(id);
+    comision.formar_fila(id);
     comision.obtener_mi_grupo(grupo, id);
     //realizar tarea
     comision.terminar_tarea(grupo);
