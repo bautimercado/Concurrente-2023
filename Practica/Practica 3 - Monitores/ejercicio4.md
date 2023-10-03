@@ -8,33 +8,31 @@ Monitor Puente {
     int cant_dormidos = 0;
 
     procedure ingresar_al_puente(peso: double in; id: int in) {
-        if (peso_max+peso > 50000) { // Debería dormirse si hay alguien esperando.
-            cant_dormidos++;
-            ids_procesos.insertar_al_inicio(id);
+        if (peso_max+peso > 50000 or cant_dormidos > 0) {
+            ids_procesos.push(id);
             peso_por_vehiculo[id] = peso;
+            cant_dormidos++;
             wait(dormidos[id]);
         }
-        peso_max = peso_max + peso; // Deberia ser un else
+        else -> peso_max = peso_max + peso;
     }
     
     procedure salir_del_puente(peso: double in) {
         int id;
         peso_max = peso_max - peso;
         if (cant_dormidos > 0) {
-            id = ids_procesos.pop();  // Deberia ser un .top()
+            id = ids_procesos.top();    // El top() lo que hace es obtener el dato de la cola pero sin sacarlo.
             if (peso_max+peso_por_vehiculo[id] <= 50000)
                 signal(dormidos[id]);
-                // Hacer pop e incrementar el peso del puente.
-            else {
-                ids_procesos.insertar_al_inicio(id);
-            } // No es necesario con el top()
+                peso_max += peso_por_vehiculo[id];
+                id = ids_procesos.pop();
         }
     }
 }
 
 Process Vehiculo[id=1 to N] {
     double peso = ...;
-    Puente.ingresar_al_puente(peso);
+    Puente.ingresar_al_puente(peso, id);
     //transitando puente;
     Puente.salir_del_puente(peso);
 }
