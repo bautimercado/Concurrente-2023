@@ -213,7 +213,7 @@ Process Empleado {
     int cant_personas = N;
     while (cant_personas > 0) {
         Impresora.dar_impresora();
-        cant_personas++;
+        cant_personas--;
     }
 }
 ```
