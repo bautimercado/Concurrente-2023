@@ -25,7 +25,7 @@ monitor Maquina {
                 wait(esperando);
             }
         }
-        elif (not maquina_libre)
+        elif (not maquina_libre)  //NO es necesario preguntar esto ya que si hay botellas disponibles directamente la saca
             dormidos++;
             wait(esperando);
         else
@@ -33,7 +33,7 @@ monitor Maquina {
     }
 
     procedure salir() {
-        cant_botellas--;
+        cant_botellas--;       // Debería decrementarlo cuando puedo acceder (en el procedure anterior)
         if (dormidos > 0) {
             dormidos--;
             signal(esperna);
