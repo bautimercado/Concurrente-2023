@@ -18,7 +18,7 @@ process Empleado {
         for j = 1 to 5 {
             V(personas_vacunandose);
         }
-        //Espera a que se vayan
+        //Espera a que se vayan --> NO ES NECESARIO
         P(esperando_salida);
         //Llama a otras 5
         for j = 1 to 5 {
@@ -41,7 +41,7 @@ process Persona[id=1 to 50] {
 
     P(personas_vacunandose);
 
-    //Necesario?
+    //Necesario? --> NO
     P(mutex_persona);
     cant_yendose++;
     if (cant_yendose == 5) {
