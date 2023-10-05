@@ -45,6 +45,6 @@ process Jugador[id=0 to 19] {
     int id_equipo = DarEquipo();
     Equipo[id_equipo].anotarse(id_cancha);
     Cancha[id_cancha].llega_jugador(id_equipo);
-    delay(50minutos);
+    // delay(50minutos);     NO DEBERÍA, YA QUE LOS PROCESOS EMPIEZAN A HACER DELAY CUANDO OBTIENE EL CORE (EN MOMENTO DISTINTOS)
 }
 ```
