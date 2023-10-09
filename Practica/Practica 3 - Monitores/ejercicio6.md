@@ -16,7 +16,7 @@ Monitor JTP {
         id_grupo = AsignarNroGrupo();
     }
 
-    procedure entregar(id_grupo: int in; nota_obtenida: int out) {   // Consultar
+    procedure entregar(id_grupo: int in; nota_obtenida: int out) {
         entrega_grupos[id_grupo]++;
         if (entrega_grupos[id_grupo] == 2) {
             notas_grupos[id_grupo] = nota;

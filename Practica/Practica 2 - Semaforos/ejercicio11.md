@@ -2,8 +2,8 @@
 
 ```cpp
 Cola personas_esperando;
-sem mutex_persona = 1, sem_personas = 5, esperando_personas = 0, personas_vacunandose = 0, esperando_salida = 0;
-int cant_esperando = 0, cant_yendose = 0;
+sem mutex_persona = 1, sem_personas = 5, esperando_personas = 0, personas_vacunandose = 0;
+int cant_esperando = 0;
 
 process Empleado {
     int id_persona;
@@ -17,12 +17,6 @@ process Empleado {
         //Avisa a las 5 personas que pueden retirarse:
         for j = 1 to 5 {
             V(personas_vacunandose);
-        }
-        //Espera a que se vayan --> NO ES NECESARIO
-        P(esperando_salida);
-        //Llama a otras 5
-        for j = 1 to 5 {
-            V(sem_personas);
         }
     }
 }
@@ -38,16 +32,6 @@ process Persona[id=1 to 50] {
         cant_esperando = 0;
     }
     V(mutex_persona);
-
     P(personas_vacunandose);
-
-    //Necesario? --> NO
-    P(mutex_persona);
-    cant_yendose++;
-    if (cant_yendose == 5) {
-        V(esperando_salida);
-        cant_yendose = 0;
-    }
-    V(mutex_persona);
 }
 ```

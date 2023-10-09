@@ -22,6 +22,7 @@ monitor Cancha[id=0 to 1] {
             signal_all(esperando_jugadores);
         else
             wait(esperando_jugadores);
+        delay(50minutos);
     }
 }
 
@@ -32,7 +33,7 @@ monitor Equipo[id=0 to 3] {
     procedure anotarse(id_cancha: int out) {
         cant_jugadores++;
         if (cant_jugadores == 5)
-            AdministradorCancha.obtener_cancha(cancha_aux);  // Se puede llamar a otro monitor desde un monitor?
+            AdministradorCancha.obtener_cancha(cancha_aux);
             signal_all(espernado_partido);
         else
             wait(esperando_partido);
@@ -45,6 +46,5 @@ process Jugador[id=0 to 19] {
     int id_equipo = DarEquipo();
     Equipo[id_equipo].anotarse(id_cancha);
     Cancha[id_cancha].llega_jugador(id_equipo);
-    // delay(50minutos);     NO DEBERÍA, YA QUE LOS PROCESOS EMPIEZAN A HACER DELAY CUANDO OBTIENE EL CORE (EN MOMENTO DISTINTOS)
 }
 ```

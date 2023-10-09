@@ -12,14 +12,14 @@ process Enfermera[id=1 to 3] {
     while hisopados > 0 {
         P(enfermera_esperando[id]);
         if (not pasajeros_esperando_en_puesto[id].isEmpty()) {
+            P(mutex_pasajero);
+            cant_pasajeros_puesto[id]++;
+            V(mutex_pasajero);
             P(mutex_colas[id]);
             id_pasajero = pasajeros_esperando_en_puesto[id].pop();
             V(mutex_colas[id]);
-            //Hisopar(id_pasajero);
 
-            P(mutex_colas[id]);
-            cant_pasajeros_puesto[id]--;
-            V(mutex_colas[id]);
+            //Hisopar(id_pasajero);
             V(atendidos[id_pasajero]);
 
             P(mutex_enfermeras);    
@@ -33,6 +33,7 @@ process Enfermera[id=1 to 3] {
 
 process Pasajero[id=1 to 150] {
     int puesto;
+    //Calculo del mínimo:
     P(mutex_pasajero);
     if (cant_pasajeros_puesto[1] < cant_pasajeros_puesto[2] and cant_pasajeros_puesto[1] < cant_pasajeros_puesto[3])
         puesto = 1;
@@ -40,12 +41,13 @@ process Pasajero[id=1 to 150] {
         puesto = 2;
     else
         puesto = 3;
+    cant_pasajeros_puesto[puesto]++;
     V(mutex_pasajero);
     
     P(mutex_colas[puesto]);
-    cant_pasajeros_puesto[puesto]++;
     pasajeros_esperando_en_puesto[puesto].push(id);
     V(mutex_colas[puesto]);
+
     V(enfermera_esperando);
     P(atendidos[id]);
 }
