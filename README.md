@@ -29,4 +29,4 @@
 - [Ejercicio 5](https://github.com/bautimercado/Concurrente-2023/blob/beab7fd8836bf69e3ef36a2a5d38dff19a038de2/Practica/Practica%203%20-%20Monitores/ejercicio5.md)
 - [Ejercicio 6](https://github.com/bautimercado/Concurrente-2023/blob/5b4d3eecf9e2e6bf5ad4c716c0c256b945320b57/Practica/Practica%203%20-%20Monitores/ejercicio6.md)
 - [Ejercicio 7](https://github.com/bautimercado/Concurrente-2023/blob/5b4d3eecf9e2e6bf5ad4c716c0c256b945320b57/Practica/Practica%203%20-%20Monitores/ejercicio7.md)
-- [Ejercicio 8](https://github.com/bautimercado/Concurrente-2023/blob/5b4d3eecf9e2e6bf5ad4c716c0c256b945320b57/Practica/Practica%203%20-%20Monitores/ejercicio8.md)
+- [Ejercicio 8](https://github.com/bautimercado/Concurrente-2023/blob/master/Practica/Practica%203%20-%20Monitores/ejercicio8.md)
