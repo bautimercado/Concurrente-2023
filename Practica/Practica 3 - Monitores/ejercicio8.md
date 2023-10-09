@@ -12,22 +12,24 @@ monitor Maquina {
             if (not repositor_llamado) {
                 repositor_llamado = true;
                 signal(repositor);
-                //await(caller);
+                dormidos++;  // Para que no le roben el lugar
+                await(caller);
+                dormidos--;
             }
-            dormidos++;
-            await(esperando_botellas);
+            else {
+                dormidos++;
+                await(esperando_botellas);
+            }
         }
-        if (dormidos > 0) { dormidos++; await(esperando_botellas); }  // En el caso de que entre un proceso sin que haya entrado antes el proceso que llamó al repositor.
+        elif (dormidos > 0) { dormidos++; await(esperando_botellas); }  // En el caso de que entre un proceso sin que haya entrado antes el proceso que llamó al repositor.
         cant_botellas--;
         if (dormidos > 0) { dormidos--; signal(esperando_botellas); }
-
     }
 
     procedure llenar_dispenser() {
         if (not repositor_llamado) -> await(repositor);
         cant_botellas = 20;
-        signal(esperando_botellas);
-        dormidos--;
+        signal(caller);
         repositor_llamado = false;
     }
 }
