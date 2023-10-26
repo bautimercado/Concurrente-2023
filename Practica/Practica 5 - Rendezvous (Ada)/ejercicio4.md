@@ -9,14 +9,15 @@ Process Main is
     Task Type Persona;
     Task Body Persona
         int nivel_de_enojo = 1;
-        float tiempo_espera = 5.0;
+        bool atendido = false;
     Begin
-        while nivel_de_enojo < 3 loop
+        while (nivel_de_enojo < 3 and not atendido) loop
             select
                 Medico.atender_persona();
-            or delay(tiempo_espera)
+                atendido = true;
+            or delay(300.0);
+                delay(600.0);
                 nivel_de_enojo++;
-                tiempo_espera += 5.0;
             end select;
         end loop;
     End Persona;
@@ -40,38 +41,47 @@ Process Main is
 
     Task EscritorioMedico is
         entry dejar_pedido(pedido: IN Pedido);
+        entry obtener_pedido(pedido: OUT Pedido);
     End EscritorioMedico;
     Task Body EscritorioMedico
         queue pedidos;
     Begin
         loop
-            accept dejar_pedido(pedido: IN Pedido) do
-                pedidos.push(pedido);
-            end dejar_pedido;
-            Medico.pedido_en_escritorio(pedidos.pop());
+            select
+                accept dejar_pedido(pedido: IN Pedido) do
+                    pedidos.push(pedido);
+                end dejar_pedido;
+            or
+                when (not pedidos.empty()) => accept obtener_pedido(pedido: OUT Pedido) do
+                    pedido = pedidos.pop();
+                end obtener_pedido;
+            end select;
         end loop;
     End EscritorioMedico;
 
     Task Medico is
         entry atender_persona();
         entry atender_enfermera();
-        entry pedido_en_escritorio(pedido: IN Pedido);
     End Medico;
     Task Body Medico
+        Pedido pedido;
     Begin
         loop
             select
-                where (atender_enfermera'count == 0) => accept atender_persona() do
+                accept atender_persona() do
                     -- Atendiendo a una persona por cierto tiempo;
                 end atender_persona;
             or
-                accept atender_enfermera() do
+                when (atender_persona'count == 0) => accept atender_enfermera() do
                     -- Atendiendo enfermera por cierto tiempo;
                 end atender_enfermera;
-            or
-                where (atender_enfermera'count == 0 and atender_persona'count == 0) => pedido_en_escritorio(pedido: IN pedido) do
-                    -- Atender pedido dejado por una enfermera
-                end pedido_en_escritorio;
+            else
+                select
+                    EscritorioMedico.obtener_pedido(pedido);
+                    -- Atender pedido pendiente;
+                else
+                    null;
+                end select;
             end select;
         end loop;
     End Medico;

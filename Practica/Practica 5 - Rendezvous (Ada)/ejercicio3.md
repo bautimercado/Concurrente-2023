@@ -18,7 +18,6 @@ Process Main is
             end select;
         end loop;
     End Proceso1;
-
     Task Proceso2;
     Task Body Proceso2 is
         Señal s;
@@ -33,7 +32,6 @@ Process Main is
             end select;
         end loop;
     End Proceso2;
-
     Task Cental is
         entry aceptar_p1(s: in Señal);
         entry aceptar_p2(s: in Señal);
@@ -49,7 +47,7 @@ Process Main is
         -- Usar señal de p1
         loop
             select
-                where (not solo_p2) => accept aceptar_p1(s: in Señal) do
+                when (not solo_p2) => accept aceptar_p1(s: in Señal) do
                     señal = s;
                 end aceptar_p1;
                 -- Usar señal de p1
@@ -60,25 +58,28 @@ Process Main is
                 Timer.contar();
                 solo_p2 = true;
                 -- Usar señal de p2;
-            or
-                accept timeout() do
-                    solo_p2 = false;
-                end timeout;
+                while (solo_p2) loop
+                    select
+                        accept aceptar_p2(s: in Señal) do
+                            señal = s;
+                        end aceptar_p2;
+                        -- Usar señal de p2;
+                        or accept timeout() do
+                            solo_p2 = false;
+                        end timeout;
+                end loop;
         end loop;
     End Cental;
-
     Task Timer is
         entry contar();
     End Timer;
     Task Body Timer is
         loop
-            accept contar() do
-                delay(180);
-            end contar;
+            accept contar();
+            delay(180);
             Central.timeout();
         end loop;
     End Timer;
-
 Begin
     null;
 End Main;

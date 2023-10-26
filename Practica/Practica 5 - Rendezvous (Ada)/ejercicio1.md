@@ -46,11 +46,11 @@ Procedure Main is
     Begin
         loop
             select
-                where ((peso_actual + 1) <= 5) => Accept ingresar_auto();
+                when ((peso_actual + 1) <= 5) => Accept ingresar_auto();
                     peso_actual++;
-                or where ((peso_actual + 2) <= 5) => Accept ingresar_camioneta();
+                or when ((peso_actual + 2) <= 5) => Accept ingresar_camioneta();
                     peso_actual += 2;
-                or where ((peso_actual + 3) <= 5) => Accept ingresar_camioneta();
+                or when ((peso_actual + 3) <= 5) => Accept ingresar_camioneta();
                 or Accept salir_auto()
                     peso_actual--;
                 or Accept salir_camioneta()
@@ -109,11 +109,11 @@ Procedure Main is
     Begin
         loop
             select
-                where ((peso_actual + 1) <= 5 and ingresar_camion'count == 0) => Accept ingresar_auto()
+                when ((peso_actual + 1) <= 5 and ingresar_camion'count == 0) => Accept ingresar_auto()
                     peso_actual++;
-                or where ((peso_actual + 2) <= 5 and ingresar_camion'count == 0) => Accept ingresar_camioneta()
+                or when ((peso_actual + 2) <= 5 and ingresar_camion'count == 0) => Accept ingresar_camioneta()
                     peso_actual += 2;
-                or where ((peso_actual + 3) <= 5) => Accept ingresar_camion()
+                or when ((peso_actual + 3) <= 5) => Accept ingresar_camion()
                     peso_actual += 3;
                 or Accept salir_auto()
                     peso_actual--;
