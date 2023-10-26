@@ -27,7 +27,7 @@ Process Main is
         loop
             select
                 Central.aceptar_p2(s);
-                s = generar_señal();  -- Acá o en el or??
+                s = generar_señal();
             or delay(60);
                 null;
             end select;
