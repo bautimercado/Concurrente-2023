@@ -52,3 +52,4 @@
 - [Ejercicio 3](https://github.com/bautimercado/Concurrente-2023/blob/master/Practica/Practica%205%20-%20Rendezvous%20(Ada)/ejercicio3.md)
 - [Ejercicio 4](https://github.com/bautimercado/Concurrente-2023/blob/master/Practica/Practica%205%20-%20Rendezvous%20(Ada)/ejercicio4.md)
 - [Ejercicio 5](https://github.com/bautimercado/Concurrente-2023/blob/master/Practica/Practica%205%20-%20Rendezvous%20(Ada)/ejercicio5.md)
+- [Ejercicio 6](https://github.com/bautimercado/Concurrente-2023/blob/master/Practica/Practica%205%20-%20Rendezvous%20(Ada)/ejercicio5.md)
