@@ -19,7 +19,7 @@ process Examinador[id:1..R] {
 process Buffer {
     cola buffer;
     String url;
-    do Examinador?sitio(url) -> buffer.push(url);
+    do Examinador[*]?sitio(url) -> buffer.push(url);
         ❏ not empty(buffer); Analizador?pedido() ->
             Analizador!sitio_a_analizar(buffer.pop())
 }
