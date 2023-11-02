@@ -38,12 +38,14 @@
 - [Ejercicio 1](https://github.com/bautimercado/Concurrente-2023/blob/master/Practica/Practica%204%20-%20Pasaje%20de%20Mensajes/PMA/ejercicio1.md)
 - [Ejercicio 2](https://github.com/bautimercado/Concurrente-2023/blob/master/Practica/Practica%204%20-%20Pasaje%20de%20Mensajes/PMA/ejercicio2.md)
 - [Ejercicio 3](https://github.com/bautimercado/Concurrente-2023/blob/master/Practica/Practica%204%20-%20Pasaje%20de%20Mensajes/PMA/ejercicio3.md)
+- [Ejercicio 4](https://github.com/bautimercado/Concurrente-2023/blob/master/Practica/Practica%204%20-%20Pasaje%20de%20Mensajes/PMA/ejercicio4.md)
 
 ### Pasaje de Mensajes Sincrónico
 
 - [Ejercicio 1](https://github.com/bautimercado/Concurrente-2023/blob/master/Practica/Practica%204%20-%20Pasaje%20de%20Mensajes/PMS/ejercicio1.md)
 - [Ejercicio 2](https://github.com/bautimercado/Concurrente-2023/blob/master/Practica/Practica%204%20-%20Pasaje%20de%20Mensajes/PMS/ejercicio2.md)
 - [Ejercicio 3](https://github.com/bautimercado/Concurrente-2023/blob/master/Practica/Practica%204%20-%20Pasaje%20de%20Mensajes/PMS/ejercicio3.md)
+- [Ejercicio 4](https://github.com/bautimercado/Concurrente-2023/blob/master/Practica/Practica%204%20-%20Pasaje%20de%20Mensajes/PMS/ejercicio4.md)
 
 ## Practica 5 - Rendezvous (Ada)
 
