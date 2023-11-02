@@ -9,8 +9,8 @@ cocina y se lo entrega directamente al cliente correspondiente.
 Nota: maximizar la concurrencia.
 
 ```cpp
-chan priv_cliente[C], priv_vendedor[3]
-chan pedidos, vendedor_listo, confirmados;
+chan priv_cliente[C](Comida), priv_vendedor[3](int);
+chan pedidos(int), vendedor_listo(int), confirmados(int);
 
 process Cliente[id:1..C] {
     Comida comida;
