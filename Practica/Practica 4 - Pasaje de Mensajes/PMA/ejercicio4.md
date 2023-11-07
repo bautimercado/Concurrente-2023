@@ -4,32 +4,29 @@
 chan pedidos_cabina(int), pagar(int, cabina), pedido();
 chan clientes_cabinas[N](Cabina), clientes_factura[N](Factura);
 
-procedure Cliente[id:1..N] {
+process Cliente[id:1..N] {
     Cabina cabina;
     Factura factura;
-    send pedido();
     send pedidos_cabina(id);
     receive clientes_cabinas[id](cabina);
     // Usando cabina;
-    send pedido();
     send pagar(id, cabina);
     receive clientes_factura[id](factura);
 }
 
-procedure Empleado {
+process Empleado {
     Cola cabinas;  // Suponiendo que arranca con 10 instancias de cabina;
     int id_cliente;
     Cabina cabina;
     while (true) {
-        // se evita Busy Waiting?
-        receive pedido();
-        if (empty(pagar)) {
+        if (empty(pagar) and not empty(cabinas)) {
             receive pedidos_cabinas(id_cliente);
             send clientes_cabinas[id_cliente](cabinas.pop());
         }
         else {
             receive pagar(id_cliente, cabina);
             cabinas.push(cabina);
+            // Generando factura;
             send clientes_factura[id_cliente](cabina);
         }
     }
