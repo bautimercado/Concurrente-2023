@@ -2,8 +2,7 @@
 
 ```ada
 Procedure Main is
-    Task Type Servidor is
-        entry recibir_huella(huella: in Huella);
+    Task Type Servidor;
     End Servidor
     Task Body Servidor
         Huella test;
@@ -11,57 +10,47 @@ Procedure Main is
         double valor;
     Begin
         loop
-            accept recibir_huella(huella: in Huella) do
-                test = huella;
-            end recibir_huella;
+            Especialista.pedido_huella(test);
             Buscar(test, codigo, valor);
-            Buffer.encolar_huella(codigo, valor);
+            Especialista.recibir_huella(codigo, valor);
+            Especialista.barrera();
         end loop;
     End Servidor;
     arr_sevidores: array (1..8) of Servidor;
 
-    Task Buffer is
-        entry encolar_huella(codigo: in integer, valor: in double);
-        entry obtener_resultado(codigo: out integer, valor: out integer);
-    End Buffer;
-    Task Body Buffer
-        cola resultados(codigo: integer,
-                        valor: double);
-    Begin
-        loop
-            for i in 1..8 loop
-                accept encolar_huella(codigo: in integer, valor: in double) do
-                    resultados.push(codigo, valor);
-                end encolar_huella;
-            end loop;
-            for i in 1..8 loop
-                accept obtener_resultado(codigo: out integer, valor: out double).
-                    codigo, valor = resultados.pop();
-                end obtener_resultado;
-            end loop;
-        end loop;
-    End Buffer;
-
     Task Especialista is
-
+        entry pedido_huella(una_huella: out Huella);
+        entry recibir_resultado(codigo: in integer, valor: in double);
+        entry barrera();
     End Especialista;
     Task Body Especialista
+        Huella huella;
         integer codigo_aux, codigo;
         double valor_max = -9999.99, valor_aux;
     Begin
+        -- huella = obtener_huella();
         loop
-            -- huella = obtener_huella();
-            for i in 1..8 loop
-                Servidor(i).recibir_huella(huella);
-            end loop;
-            for i in 1..8 loop
-                Buffer.obtener_resultado(codigo_aux, valor_aux);
-                if (valor_aux > valor_max) then
-                    valor_max = valor_aux;
-                    codigo = codigo_aux;
-                end if;
+            for i in 1..16 loop
+                select
+                    accept pedido_huella(una_huella: out Huella) do
+                        una_huella = huella;
+                    end pedido_huella;
+                or
+                    accept recibir_resultado(codigo: in integer, valor: in double) do
+                        codigo_aux = codigo;
+                        valor_aux = valor;
+                    end recibir_resultado;
+                    if (valor_aux > valor_max) then
+                        valor_max = valor_aux;
+                        codigo = codigo_aux;
+                    end if;
+                end select;
             end loop;
             -- Hacer algo con el resultado;
+            -- huella = obtener_huella();
+            for i in 1..8 loop
+                accept barrera();
+            end loop;
         end loop;
     End Especialista;
 Begin
