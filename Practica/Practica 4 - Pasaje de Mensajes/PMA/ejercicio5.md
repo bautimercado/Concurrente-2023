@@ -2,6 +2,7 @@
 
 ```cpp
 chan pedidos_director(Documento), pedidos_usuarios(Documento);
+chan pedido(bool);
 
 process Usuario[id: 1..N] {
     Documento documento, aux;
@@ -9,6 +10,7 @@ process Usuario[id: 1..N] {
     while (true) {
         // Generando documento;
         send pedidos_usuario(documento, id);
+        send pedido(true);
     }
 }
 
@@ -18,12 +20,15 @@ process Director {
     while (true) {
         // Generando documento;
         send pedidos_director(documento);
+        send pedido(true);
     }
 }
 
 process Impresora[id: 1..3] {
     Documento documento;
+    bool msj;
     while (true) {
+        receive pedido(msj);
         if (empty(pedidos_director)) {
             receive pedidos_usuario(documento);
             // Imprimiendo documento;
