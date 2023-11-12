@@ -2,14 +2,12 @@
 
 ```cpp
 chan pedidos_director(Documento), pedidos_usuarios(Documento);
-chan pedido(); // Se puede esto?
 
 process Usuario[id: 1..N] {
     Documento documento, aux;
     cola documentos;
     while (true) {
         // Generando documento;
-        send pedido();
         send pedidos_usuario(documento, id);
     }
 }
@@ -19,7 +17,6 @@ process Director {
     cola documentos;
     while (true) {
         // Generando documento;
-        send pedido();
         send pedidos_director(documento);
     }
 }
@@ -27,7 +24,6 @@ process Director {
 process Impresora[id: 1..3] {
     Documento documento;
     while (true) {
-        receive pedido();  // Evita busy waiting?
         if (empty(pedidos_director)) {
             receive pedidos_usuario(documento);
             // Imprimiendo documento;
